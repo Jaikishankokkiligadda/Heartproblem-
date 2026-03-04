@@ -32,7 +32,7 @@ st.title("Heart Disease Prediction")
 age = st.slider("Age", 0, 120, 50)  # min 0, max 120, default 50
 
 # 2. Sex (Radio)
-sex = st.radio("Sex", options=[0, 1], format_func=lambda x: "Male" if x==1 else "Female"))
+sex = st.radio("Sex", options=[0, 1], format_func=lambda x: "Male" if x==1 else "Female")
 
 # 3. Chest Pain Type (Selectbox)
 chest_pain = st.selectbox("Chest Pain Type", options=[0,1,2,3], 
