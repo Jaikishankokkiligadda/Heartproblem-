@@ -14,7 +14,7 @@ try:
         st.error("❌ The loaded file is not a trained pipeline with predict_proba.")
         model = None
     else:
-        st.success("✅ Trained pipeline loaded successfully!")
+        st.success("Welcome to Check Your Heart!")
 except Exception as e:
     st.error(f"❌ Error loading model: {e}")
     model = None
