@@ -7,7 +7,7 @@ import os
 # 1️⃣ Set Model Path
 # -----------------------------
 BASE_DIR = os.path.dirname(__file__)
-model_path = os.path.join(BASE_DIR, "Heart_disease_model_pipeline.pkl")  # ✅ Make sure this matches your file
+model_path = os.path.join(BASE_DIR, "heart_model.pkl")  # ✅ updated file name
 
 # -----------------------------
 # 2️⃣ Load Model Safely
