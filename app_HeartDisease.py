@@ -7,7 +7,7 @@ import os
 # 1️⃣ Set Model Path
 # -----------------------------
 BASE_DIR = os.path.dirname(__file__)
-model_path = os.path.join(BASE_DIR, "heart_model.pkl")
+model_path = os.path.join(BASE_DIR, "heart_model.pkl")  # trained model file
 
 # -----------------------------
 # 2️⃣ Load Model Safely
@@ -19,63 +19,50 @@ else:
     try:
         with open(model_path, "rb") as f:
             model = pickle.load(f)
-        st.success("✅ Model loaded successfully!")
+        # Check if the loaded object has predict method
+        if not hasattr(model, "predict"):
+            st.error("❌ The loaded file is not a trained model. Please save the trained model, not predictions.")
+            model = None
+        else:
+            st.success("✅ Trained model loaded successfully!")
     except Exception as e:
         st.error(f"❌ Error loading model: {e}")
+        model = None
 
 # -----------------------------
-# 3️⃣ User Input with Improved Widgets
+# 3️⃣ User Input Widgets
 # -----------------------------
 st.title("Heart Disease Prediction")
 
-# 1. Age (Slider)
-age = st.slider("Age", 0, 120, 50)  # min 0, max 120, default 50
-
-# 2. Sex (Radio)
-sex = st.radio("Sex", options=[0, 1], format_func=lambda x: "Male" if x==1 else "Female")
-
-# 3. Chest Pain Type (Selectbox)
-chest_pain = st.selectbox("Chest Pain Type", options=[0,1,2,3], 
-                          format_func=lambda x: {0:"Typical Angina",1:"Atypical Angina",2:"Non-anginal Pain",3:"Asymptomatic"}[x])
-
-# 4. Resting Blood Pressure (Slider)
+# Numeric inputs
+age = st.slider("Age", 0, 120, 50)
 rest_bp = st.slider("Resting Blood Pressure", 50, 250, 120)
-
-# 5. Serum Cholesterol (Slider)
 cholesterol = st.slider("Serum Cholesterol", 100, 600, 200)
-
-# 6. Fasting Blood Sugar > 120 mg/dl (Radio)
-fbs = st.radio("Fasting Blood Sugar > 120 mg/dl", options=[0,1], format_func=lambda x: "Yes" if x==1 else "No")
-
-# 7. Resting ECG Result (Selectbox)
-ecg = st.selectbox("Resting ECG Result", options=[0,1,2], 
-                   format_func=lambda x: {0:"Normal",1:"ST-T Abnormality",2:"Left Ventricular Hypertrophy"}[x])
-
-# 8. Max Heart Rate Achieved (Slider)
 max_hr = st.slider("Max Heart Rate Achieved", 60, 220, 150)
-
-# 9. Exercise Induced Angina (Radio)
-angina = st.radio("Exercise Induced Angina", options=[0,1], format_func=lambda x: "Yes" if x==1 else "No")
-
-# 10. ST Depression (Slider)
 st_dep = st.slider("ST Depression", 0.0, 10.0, 1.0, step=0.1)
 
-# 11. Slope of ST Segment (Selectbox)
-slope = st.selectbox("Slope of ST Segment", options=[0,1,2], 
+# Binary / categorical inputs
+sex = st.radio("Sex", options=[0, 1], format_func=lambda x: "Male" if x==1 else "Female")
+fbs = st.radio("Fasting Blood Sugar > 120 mg/dl", options=[0,1], format_func=lambda x: "Yes" if x==1 else "No")
+angina = st.radio("Exercise Induced Angina", options=[0,1], format_func=lambda x: "Yes" if x==1 else "No")
+
+chest_pain = st.selectbox("Chest Pain Type", options=[0,1,2,3], 
+                          format_func=lambda x: {0:"Typical Angina",1:"Atypical Angina",2:"Non-anginal Pain",3:"Asymptomatic"}[x])
+ecg = st.selectbox("Resting ECG Result", options=[0,1,2],
+                   format_func=lambda x: {0:"Normal",1:"ST-T Abnormality",2:"Left Ventricular Hypertrophy"}[x])
+slope = st.selectbox("Slope of ST Segment", options=[0,1,2],
                      format_func=lambda x: {0:"Upsloping",1:"Flat",2:"Downsloping"}[x])
-
-# 12. Number of Major Vessels (Selectbox)
 vessels = st.selectbox("Number of Major Vessels Colored by Fluoroscopy", options=[0,1,2,3])
-
-# 13. Thalassemia (Selectbox)
-thal = st.selectbox("Thalassemia", options=[1,2,3], 
+thal = st.selectbox("Thalassemia", options=[1,2,3],
                     format_func=lambda x: {1:"Normal",2:"Fixed Defect",3:"Reversible Defect"}[x])
 
-# Collect all inputs in correct order
+# -----------------------------
+# 4️⃣ Prepare Data
+# -----------------------------
 data = np.array([[age, sex, chest_pain, rest_bp, cholesterol, fbs, ecg, max_hr, angina, st_dep, slope, vessels, thal]])
 
 # -----------------------------
-# 4️⃣ Make Prediction Safely
+# 5️⃣ Predict Button
 # -----------------------------
 if st.button("Predict"):
     if model is None:
