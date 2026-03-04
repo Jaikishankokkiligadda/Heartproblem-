@@ -24,14 +24,30 @@ else:
         st.error(f"❌ Error loading model: {e}")
 
 # -----------------------------
-# 3️⃣ User Input (example)
+# 3️⃣ User Input with Real Feature Names
 # -----------------------------
 st.title("Heart Disease Prediction")
 
-# Example: assuming your model expects 13 features
+# Replace with your model's actual feature names
+feature_names = [
+    "Age",
+    "Sex (1=Male, 0=Female)",
+    "Chest Pain Type (0-3)",
+    "Resting Blood Pressure",
+    "Serum Cholesterol",
+    "Fasting Blood Sugar > 120 mg/dl (1=Yes,0=No)",
+    "Resting ECG Result (0-2)",
+    "Max Heart Rate Achieved",
+    "Exercise Induced Angina (1=Yes,0=No)",
+    "ST Depression",
+    "Slope of ST segment (0-2)",
+    "Number of Major Vessels Colored by Fluoroscopy (0-3)",
+    "Thalassemia (1-3)"
+]
+
 inputs = []
-for i in range(1, 14):
-    val = st.number_input(f"Feature {i}", value=0.0)
+for feature in feature_names:
+    val = st.number_input(feature, value=0.0)
     inputs.append(val)
 
 # Convert to 2D array for prediction
