@@ -7,7 +7,7 @@ import os
 # 1️⃣ Load Trained Pipeline
 # -----------------------------
 BASE_DIR = os.path.dirname(__file__)
-model_path = os.path.join(BASE_DIR, "HeartDisease_model_pipeline.pkl")
+model_path = os.path.join(BASE_DIR, "heart_model.pkl")
 
 try:
     model = joblib.load(model_path)
